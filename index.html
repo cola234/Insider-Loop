@@ -1,0 +1,588 @@
+﻿<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap"
+      rel="stylesheet"
+    />
+    <title>Insider Loop - Start</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #05060a;
+        --bg-deep: #020205;
+        --neon-cyan: #22f3ff;
+        --neon-pink: #ff4fd8;
+        --neon-blue: #4d7cff;
+        --neon-green: #28ff6b;
+        --text-main: #e8f6ff;
+        --text-muted: #9aa7c7;
+        --panel: rgba(10, 16, 36, 0.82);
+        --panel-border: rgba(34, 243, 255, 0.45);
+        --glow: 0 0 18px rgba(34, 243, 255, 0.35);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: "VT323", "Press Start 2P", monospace;
+        background: radial-gradient(circle at top, rgba(77, 124, 255, 0.12), transparent 55%),
+          radial-gradient(circle at 70% 20%, rgba(255, 79, 216, 0.1), transparent 50%),
+          linear-gradient(180deg, var(--bg) 0%, var(--bg-deep) 100%);
+        color: var(--text-main);
+        overflow: hidden;
+      }
+
+      .stage {
+        position: relative;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        padding: 28px clamp(20px, 5vw, 64px) 32px;
+        gap: 24px;
+        z-index: 1;
+      }
+
+      .stage::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: repeating-linear-gradient(
+            0deg,
+            rgba(255, 255, 255, 0.05) 0,
+            rgba(255, 255, 255, 0.05) 1px,
+            transparent 1px,
+            transparent 3px
+          ),
+          repeating-linear-gradient(
+            90deg,
+            rgba(34, 243, 255, 0.04) 0,
+            rgba(34, 243, 255, 0.04) 1px,
+            transparent 1px,
+            transparent 6px
+          );
+        opacity: 0.3;
+        pointer-events: none;
+        mix-blend-mode: screen;
+        z-index: 0;
+      }
+
+      .stage::after {
+        content: "";
+        position: absolute;
+        inset: -20% 0 0;
+        background: radial-gradient(circle at 50% 0%, rgba(34, 243, 255, 0.25), transparent 55%);
+        opacity: 0.6;
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        position: relative;
+        z-index: 2;
+      }
+
+      .title {
+        font-family: "Press Start 2P", monospace;
+        font-size: clamp(18px, 2vw, 24px);
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        text-shadow: 0 0 12px rgba(34, 243, 255, 0.65);
+      }
+
+      .toggles {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+
+      .toggle {
+        font-family: "Press Start 2P", monospace;
+        font-size: 12px;
+        padding: 10px 16px;
+        border: 1px solid var(--panel-border);
+        background: rgba(5, 8, 20, 0.8);
+        color: var(--text-main);
+        text-transform: uppercase;
+        box-shadow: var(--glow);
+        cursor: pointer;
+        transition: border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      .toggle.off {
+        color: var(--text-muted);
+        border-color: rgba(154, 167, 199, 0.4);
+        box-shadow: none;
+      }
+
+      .hero {
+        flex: 1;
+        display: grid;
+        align-items: center;
+        gap: 24px;
+        grid-template-columns: minmax(0, 1fr);
+        position: relative;
+        z-index: 2;
+      }
+
+      .hero-panel {
+        background: var(--panel);
+        border: 1px solid var(--panel-border);
+        padding: clamp(24px, 4vw, 48px);
+        box-shadow: 0 0 40px rgba(6, 150, 255, 0.15);
+        backdrop-filter: blur(6px);
+      }
+
+      .hero h1 {
+        margin: 0 0 16px;
+        font-family: "Press Start 2P", monospace;
+        font-size: clamp(28px, 4vw, 48px);
+        line-height: 1.2;
+        color: var(--neon-cyan);
+        text-shadow: 0 0 16px rgba(34, 243, 255, 0.55);
+      }
+
+      .hero p {
+        margin: 0 0 24px;
+        font-size: clamp(20px, 2.4vw, 26px);
+        color: var(--text-muted);
+      }
+
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px;
+      }
+
+      .btn {
+        font-family: "Press Start 2P", monospace;
+        font-size: 14px;
+        padding: 16px 22px;
+        border: 1px solid transparent;
+        cursor: pointer;
+        text-transform: uppercase;
+        transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+      }
+
+      .btn-primary {
+        background: linear-gradient(135deg, var(--neon-blue), var(--neon-cyan));
+        color: #03040a;
+        box-shadow: 0 0 20px rgba(34, 243, 255, 0.5);
+      }
+
+      .btn-secondary {
+        background: rgba(8, 16, 40, 0.8);
+        color: var(--text-main);
+        border: 1px solid var(--panel-border);
+      }
+
+      .btn:hover,
+      .btn:focus-visible {
+        transform: translateY(-2px);
+      }
+
+      .hint {
+        margin-top: 24px;
+        font-size: 18px;
+        color: var(--text-muted);
+      }
+
+      .overlay {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(0, 0, 0, 0.92);
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transition: opacity 0.6s ease, visibility 0s linear 0.6s;
+        z-index: 1000;
+      }
+
+      #game-preload {
+        position: fixed;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        pointer-events: none;
+        border: 0;
+        z-index: 500;
+        transition: opacity 0.4s ease;
+      }
+
+      #game-preload.is-active {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      .overlay.is-visible {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+        transition: opacity 0.6s ease;
+      }
+
+      #week-overlay .week-text {
+        font-family: "Press Start 2P", monospace;
+        font-size: clamp(24px, 4vw, 48px);
+        color: var(--neon-green);
+        letter-spacing: 2px;
+        text-shadow: 0 0 18px rgba(40, 255, 107, 0.6);
+      }
+
+      #week-overlay {
+        background: #000;
+        z-index: 3000;
+      }
+
+      .stage.is-hidden {
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transition: opacity 0.4s ease, visibility 0s linear 0.4s;
+      }
+
+      #week-overlay.fade-out {
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transition: opacity 1.2s ease;
+      }
+
+      .rules-card {
+        width: min(720px, 90vw);
+        background: rgba(6, 10, 28, 0.95);
+        border: 1px solid var(--panel-border);
+        padding: clamp(24px, 4vw, 36px);
+        box-shadow: 0 0 30px rgba(34, 243, 255, 0.25);
+        display: grid;
+        gap: 24px;
+      }
+
+      .rules-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 18px;
+        color: var(--text-muted);
+      }
+
+      .rules-title {
+        font-family: "Press Start 2P", monospace;
+        font-size: clamp(20px, 3vw, 28px);
+        color: var(--neon-cyan);
+        margin-bottom: 12px;
+      }
+
+      .rules-desc {
+        font-size: clamp(20px, 2.6vw, 26px);
+        color: var(--text-main);
+        line-height: 1.5;
+      }
+
+      .rules-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        justify-content: space-between;
+      }
+
+      .rules-actions .btn {
+        flex: 1 1 auto;
+        min-width: 120px;
+      }
+
+      .credits-card {
+        width: min(520px, 90vw);
+        background: rgba(6, 10, 28, 0.95);
+        border: 1px solid var(--panel-border);
+        padding: clamp(24px, 4vw, 32px);
+        box-shadow: 0 0 30px rgba(255, 79, 216, 0.25);
+        text-align: center;
+        display: grid;
+        gap: 16px;
+      }
+
+      .credits-card h2 {
+        margin: 0;
+        font-family: "Press Start 2P", monospace;
+        font-size: 22px;
+        color: var(--neon-pink);
+      }
+
+      .credits-card a {
+        color: var(--neon-cyan);
+        text-decoration: none;
+      }
+
+      .footer {
+        font-size: 16px;
+        color: var(--text-muted);
+        text-align: right;
+      }
+
+      @media (max-width: 640px) {
+        .toggle {
+          font-size: 10px;
+          padding: 8px 12px;
+        }
+
+        .btn {
+          width: 100%;
+        }
+
+        .footer {
+          text-align: left;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          transition: none !important;
+          animation: none !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="stage" id="start-stage">
+      <header>
+        <div class="title">INSIDER LOOP</div>
+        <div class="toggles">
+          <button class="toggle" id="bgm-toggle" type="button">BGM: ON</button>
+          <button class="toggle" id="sfx-toggle" type="button">SFX: ON</button>
+        </div>
+      </header>
+
+      <main class="hero">
+        <section class="hero-panel">
+          <h1>Insider Loop</h1>
+          <p>准备好后点击开始，进入挑战。</p>
+          <div class="actions">
+            <button class="btn btn-primary" id="start-btn" type="button">开始游戏</button>
+            <button class="btn btn-secondary" id="credits-btn" type="button">制作人员</button>
+          </div>
+          <div class="hint">提示：音效与背景音乐可随时开关。</div>
+        </section>
+      </main>
+
+      <div class="footer">Version: Prototype</div>
+    </div>
+
+    <div class="overlay" id="week-overlay" aria-hidden="true">
+      <div class="week-text">第一周....</div>
+    </div>
+
+    <div class="overlay" id="rules-overlay" aria-hidden="true">
+      <div class="rules-card">
+        <div class="rules-header">
+          <span id="rules-progress">01 / 05</span>
+          <span>规则说明</span>
+        </div>
+        <div>
+          <div class="rules-title" id="rule-title"></div>
+          <div class="rules-desc" id="rule-desc"></div>
+        </div>
+        <div class="rules-actions">
+          <button class="btn btn-secondary" id="rules-prev" type="button">上一页</button>
+          <button class="btn btn-secondary" id="rules-skip" type="button">跳过</button>
+          <button class="btn btn-primary" id="rules-next" type="button">下一页</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="overlay" id="credits-overlay" aria-hidden="true">
+      <div class="credits-card">
+        <h2>制作人员</h2>
+        <div>
+          @beiyue66 -
+          <a href="https://x.com/beiyue66" target="_blank" rel="noreferrer">访问推特</a>
+        </div>
+        <button class="btn btn-secondary" id="credits-close" type="button">关闭</button>
+      </div>
+    </div>
+
+    <iframe id="game-preload" src="/game.html" title="game-preload" aria-hidden="true"></iframe>
+    <audio id="bgm" src="/audio/bgm.mp3" loop></audio>
+    <audio id="sfx-start" src="/audio/start.wav"></audio>
+
+    <script>
+      const startButton = document.getElementById("start-btn");
+      const creditsButton = document.getElementById("credits-btn");
+      const creditsOverlay = document.getElementById("credits-overlay");
+      const creditsClose = document.getElementById("credits-close");
+      const weekOverlay = document.getElementById("week-overlay");
+      const rulesOverlay = document.getElementById("rules-overlay");
+      const rulesTitle = document.getElementById("rule-title");
+      const rulesDesc = document.getElementById("rule-desc");
+      const rulesProgress = document.getElementById("rules-progress");
+      const rulesPrev = document.getElementById("rules-prev");
+      const rulesNext = document.getElementById("rules-next");
+      const rulesSkip = document.getElementById("rules-skip");
+      const bgmToggle = document.getElementById("bgm-toggle");
+      const sfxToggle = document.getElementById("sfx-toggle");
+      const bgmAudio = document.getElementById("bgm");
+      const startSfx = document.getElementById("sfx-start");
+      const gameFrame = document.getElementById("game-preload");
+
+      let bgmEnabled = true;
+      let sfxEnabled = true;
+      let userInteracted = false;
+      let ruleIndex = 0;
+
+            const rules = [
+              {
+                title: "游戏目标",
+                desc: "这是一款策略卡牌游戏，通过安排卡牌影响股价走势。目标是在规定周数内达到目标资产值；资产 = 现金 + 股票价值。",
+              },
+              {
+                title: "卡牌选择",
+                desc: "每天开始时，从红色卡牌（下跌）和绿色卡牌（上涨）中各选一张。红色卡牌适合在高位卖出或低位买入前使用。",
+              },
+              {
+                title: "卡牌排序",
+                desc: "选完后进入排序阶段，可拖拽调整执行顺序。顺序会改变价格路径与收益结果，也会影响连击触发。",
+              },
+              {
+                title: "牛/熊/猴组合",
+                desc: "不同的组合可以造成暴击，造成更大波动。例如牛+牛可以造成更大的波动；熊+熊可以将波动变小；猴+猴可以使得下一张牌的效果反转。",
+              },
+              {
+                title: "交易与执行",
+                desc: "点击执行后按顺序结算；当日收益影响现金与下一天。达到周目标进入下一周，否则游戏结束。",
+              },
+            ];
+
+      function updateToggle(button, enabled, label) {
+        button.classList.toggle("off", !enabled);
+        button.textContent = `${label}: ${enabled ? "ON" : "OFF"}`;
+      }
+
+      function updateRules() {
+        const current = rules[ruleIndex];
+        rulesTitle.textContent = current.title;
+        rulesDesc.textContent = current.desc;
+        rulesProgress.textContent = `${String(ruleIndex + 1).padStart(2, "0")} / 05`;
+        rulesPrev.disabled = ruleIndex === 0;
+        rulesPrev.style.opacity = ruleIndex === 0 ? "0.4" : "1";
+        rulesNext.textContent = ruleIndex === rules.length - 1 ? "进入游戏" : "下一页";
+      }
+
+      function openRules() {
+        updateRules();
+        rulesOverlay.classList.add("is-visible");
+        rulesOverlay.setAttribute("aria-hidden", "false");
+      }
+
+      function closeRules() {
+        rulesOverlay.classList.remove("is-visible");
+        rulesOverlay.setAttribute("aria-hidden", "true");
+      }
+
+      function goToGame() {
+        gameFrame.classList.add("is-active");
+        if (gameFrame.contentWindow) {
+          gameFrame.contentWindow.focus();
+        }
+      }
+
+      function showWeekSequence() {
+        document.getElementById("start-stage").classList.add("is-hidden");
+        goToGame();
+        weekOverlay.classList.add("is-visible");
+        weekOverlay.setAttribute("aria-hidden", "false");
+        setTimeout(() => {
+          weekOverlay.classList.add("fade-out");
+        }, 2000);
+        setTimeout(() => {
+          weekOverlay.classList.remove("is-visible");
+          weekOverlay.setAttribute("aria-hidden", "true");
+        }, 3200);
+      }
+
+      function playStartSound() {
+        if (!sfxEnabled) return;
+        startSfx.currentTime = 0;
+        startSfx.play().catch(() => {});
+      }
+
+      function playBgmIfAllowed() {
+        if (!bgmEnabled || !userInteracted) return;
+        bgmAudio.play().catch(() => {});
+      }
+
+      updateToggle(bgmToggle, bgmEnabled, "BGM");
+      updateToggle(sfxToggle, sfxEnabled, "SFX");
+
+      startButton.addEventListener("click", () => {
+        userInteracted = true;
+        playStartSound();
+        playBgmIfAllowed();
+        openRules();
+      });
+
+      creditsButton.addEventListener("click", () => {
+        creditsOverlay.classList.add("is-visible");
+        creditsOverlay.setAttribute("aria-hidden", "false");
+      });
+
+      creditsClose.addEventListener("click", () => {
+        creditsOverlay.classList.remove("is-visible");
+        creditsOverlay.setAttribute("aria-hidden", "true");
+      });
+
+      bgmToggle.addEventListener("click", () => {
+        bgmEnabled = !bgmEnabled;
+        updateToggle(bgmToggle, bgmEnabled, "BGM");
+        if (!bgmEnabled) {
+          bgmAudio.pause();
+        } else {
+          playBgmIfAllowed();
+        }
+      });
+
+      sfxToggle.addEventListener("click", () => {
+        sfxEnabled = !sfxEnabled;
+        updateToggle(sfxToggle, sfxEnabled, "SFX");
+      });
+
+      rulesPrev.addEventListener("click", () => {
+        if (ruleIndex > 0) {
+          ruleIndex -= 1;
+          updateRules();
+        }
+      });
+
+      rulesNext.addEventListener("click", () => {
+        if (ruleIndex < rules.length - 1) {
+          ruleIndex += 1;
+          updateRules();
+          return;
+        }
+        closeRules();
+        showWeekSequence();
+      });
+
+      rulesSkip.addEventListener("click", () => {
+        closeRules();
+        showWeekSequence();
+      });
+    </script>
+  </body>
+</html>
