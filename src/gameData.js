@@ -6,8 +6,8 @@
   cardsPerDay: 10,
   forcedRed: 1,
   forcedGreen: 1,
-  weekTargets: [1500, 1900, 2400, 3000],
-  eventChance: 0.4,
+  weekTargets: [3200, 2300, 1400, 1050],
+  eventChance: 0.35,
 }
 
 export const attributes = {
@@ -26,15 +26,15 @@ export const attributes = {
 }
 
 export const specialRules = {
-  echo: '上一张同色时有50%概率额外±2%',
-  swing: '上一张异色时有50%概率额外±3%',
-  booster: '有50%概率使波动额外增加25%',
-  brake: '有50%概率使波动额外减少25%',
-  reverseNext: '有50%概率反转下一张涨跌方向',
-  doubleNext: '有50%概率使下一张波动翻倍',
+  echo: '上一张同色时有概率额外±2%（绿55%/红50%）',
+  swing: '上一张异色时有概率额外±3%（绿55%/红50%）',
+  booster: '有概率使波动额外增加25%（绿55%/红45%）',
+  brake: '有概率使波动额外减少25%（绿40%/红55%）',
+  reverseNext: '有概率反转下一张涨跌方向（绿45%/红55%）',
+  doubleNext: '有概率使下一张波动翻倍（绿55%/红45%）',
   split: '本张60%立即生效，40%在下一张后追加',
   buffer: '本张70%立即生效，30%在日终追加',
-  ghost: '50%概率本张不生效，但下一张追加±2%',
+  ghost: '有概率本张不生效，但下一张追加±2%（绿35%/红55%）',
   shield: '若下一张异色，下一张幅度×0.85',
   latch: '若下一张同色，下一张幅度×1.15',
 }
@@ -48,6 +48,7 @@ export const cards = [
     min: 5,
     max: 10,
     special: 'echo',
+    weight: 1.1,
   },
   {
     id: 'g-bull-volume',
@@ -57,6 +58,7 @@ export const cards = [
     min: 8,
     max: 15,
     special: 'booster',
+    weight: 1.0,
   },
   {
     id: 'g-bull-steady',
@@ -66,6 +68,7 @@ export const cards = [
     min: 5,
     max: 9,
     special: 'brake',
+    weight: 1.2,
   },
   {
     id: 'g-bull-insider',
@@ -75,6 +78,7 @@ export const cards = [
     min: 6,
     max: 12,
     special: 'swing',
+    weight: 1.0,
   },
   {
     id: 'g-bull-climb',
@@ -84,6 +88,7 @@ export const cards = [
     min: 7,
     max: 13,
     special: 'echo',
+    weight: 1.0,
   },
   {
     id: 'g-monkey-echo',
@@ -93,6 +98,7 @@ export const cards = [
     min: 5,
     max: 11,
     special: 'reverseNext',
+    weight: 1.1,
   },
   {
     id: 'g-monkey-glitch',
@@ -102,6 +108,7 @@ export const cards = [
     min: 7,
     max: 14,
     special: 'doubleNext',
+    weight: 0.95,
   },
   {
     id: 'g-bear-relief',
@@ -111,15 +118,17 @@ export const cards = [
     min: 6,
     max: 10,
     special: 'swing',
+    weight: 1.15,
   },
   {
     id: 'g-bear-cover',
-    name: '空头回补',
+    name: '空头平仓',
     color: 'green',
     attr: 'bear',
     min: 5,
     max: 9,
     special: 'echo',
+    weight: 1.2,
   },
   {
     id: 'g-monkey-feint',
@@ -129,6 +138,7 @@ export const cards = [
     min: 6,
     max: 12,
     special: 'booster',
+    weight: 1.0,
   },
   {
     id: 'g-bull-ramp',
@@ -138,6 +148,7 @@ export const cards = [
     min: 9,
     max: 15,
     special: 'doubleNext',
+    weight: 0.9,
   },
   {
     id: 'g-bull-loop',
@@ -147,6 +158,7 @@ export const cards = [
     min: 5,
     max: 10,
     special: 'reverseNext',
+    weight: 1.1,
   },
   {
     id: 'g-monkey-pulse',
@@ -156,6 +168,7 @@ export const cards = [
     min: 8,
     max: 14,
     special: 'swing',
+    weight: 0.95,
   },
   {
     id: 'g-bear-calm',
@@ -165,6 +178,7 @@ export const cards = [
     min: 5,
     max: 8,
     special: 'brake',
+    weight: 1.25,
   },
   {
     id: 'g-monkey-tilt',
@@ -174,15 +188,17 @@ export const cards = [
     min: 7,
     max: 12,
     special: 'echo',
+    weight: 1.05,
   },
   {
     id: 'r-bear-dump',
     name: '红色抛压',
     color: 'red',
     attr: 'bear',
-    min: -15,
-    max: -8,
+    min: -12,
+    max: -6,
     special: 'booster',
+    weight: 0.6,
   },
   {
     id: 'r-bear-slip',
@@ -192,15 +208,17 @@ export const cards = [
     min: -12,
     max: -6,
     special: 'echo',
+    weight: 0.85,
   },
   {
     id: 'r-bear-crush',
     name: '碾压卖单',
     color: 'red',
     attr: 'bear',
-    min: -14,
-    max: -9,
+    min: -11,
+    max: -7,
     special: 'doubleNext',
+    weight: 0.65,
   },
   {
     id: 'r-bear-drain',
@@ -210,15 +228,17 @@ export const cards = [
     min: -10,
     max: -6,
     special: 'brake',
+    weight: 1.1,
   },
   {
     id: 'r-bear-hammer',
     name: '重锤下压',
     color: 'red',
     attr: 'bear',
-    min: -13,
-    max: -7,
+    min: -10,
+    max: -5,
     special: 'swing',
+    weight: 0.7,
   },
   {
     id: 'r-monkey-flip',
@@ -228,15 +248,17 @@ export const cards = [
     min: -12,
     max: -6,
     special: 'reverseNext',
+    weight: 0.95,
   },
   {
     id: 'r-monkey-glitch',
     name: '故障下挫',
     color: 'red',
     attr: 'monkey',
-    min: -14,
-    max: -8,
+    min: -11,
+    max: -6,
     special: 'doubleNext',
+    weight: 0.75,
   },
   {
     id: 'r-monkey-feint',
@@ -246,6 +268,7 @@ export const cards = [
     min: -11,
     max: -5,
     special: 'echo',
+    weight: 1.0,
   },
   {
     id: 'r-bull-trick',
@@ -255,6 +278,7 @@ export const cards = [
     min: -10,
     max: -5,
     special: 'swing',
+    weight: 1.05,
   },
   {
     id: 'r-bull-leak',
@@ -264,6 +288,7 @@ export const cards = [
     min: -9,
     max: -5,
     special: 'brake',
+    weight: 1.15,
   },
   {
     id: 'r-bull-fade',
@@ -273,6 +298,7 @@ export const cards = [
     min: -12,
     max: -7,
     special: 'booster',
+    weight: 0.8,
   },
   {
     id: 'r-monkey-tilt',
@@ -282,24 +308,27 @@ export const cards = [
     min: -11,
     max: -6,
     special: 'swing',
+    weight: 0.9,
   },
   {
     id: 'r-bear-bleed',
     name: '失血下跌',
     color: 'red',
     attr: 'bear',
-    min: -13,
-    max: -8,
+    min: -10,
+    max: -6,
     special: 'reverseNext',
+    weight: 0.75,
   },
   {
     id: 'r-bull-shake',
     name: '震荡洗盘',
     color: 'red',
     attr: 'bull',
-    min: -14,
-    max: -9,
+    min: -11,
+    max: -7,
     special: 'doubleNext',
+    weight: 0.7,
   },
   {
     id: 'r-monkey-pinch',
@@ -309,15 +338,17 @@ export const cards = [
     min: -9,
     max: -5,
     special: 'brake',
+    weight: 1.15,
   },
   {
     id: 'r-bear-break',
     name: '破位下行',
     color: 'red',
     attr: 'bear',
-    min: -15,
-    max: -10,
+    min: -11,
+    max: -7,
     special: 'booster',
+    weight: 0.55,
   },
   {
     id: 'r-bull-sink',
@@ -327,6 +358,7 @@ export const cards = [
     min: -12,
     max: -6,
     special: 'echo',
+    weight: 0.95,
   },
   {
     id: 'r-monkey-jam',
@@ -336,15 +368,17 @@ export const cards = [
     min: -10,
     max: -6,
     special: 'swing',
+    weight: 0.95,
   },
   {
     id: 'r-bear-knife',
     name: '下坠飞刀',
     color: 'red',
     attr: 'bear',
-    min: -15,
-    max: -11,
+    min: -11,
+    max: -8,
     special: 'booster',
+    weight: 0.5,
   },
   {
     id: 'g-quantum-boost',
@@ -354,6 +388,7 @@ export const cards = [
     min: 6,
     max: 11,
     special: 'split',
+    weight: 1.05,
   },
   {
     id: 'g-darkpool-accumulate',
@@ -363,6 +398,7 @@ export const cards = [
     min: 5,
     max: 9,
     special: 'buffer',
+    weight: 1.1,
   },
   {
     id: 'g-lightcone-guard',
@@ -372,6 +408,7 @@ export const cards = [
     min: 5,
     max: 10,
     special: 'shield',
+    weight: 1.15,
   },
   {
     id: 'g-mirror-flicker',
@@ -381,6 +418,7 @@ export const cards = [
     min: 6,
     max: 12,
     special: 'ghost',
+    weight: 1.3,
   },
   {
     id: 'g-mainnet-merge',
@@ -390,6 +428,7 @@ export const cards = [
     min: 7,
     max: 13,
     special: 'latch',
+    weight: 1.0,
   },
   {
     id: 'g-particle-arch',
@@ -399,6 +438,7 @@ export const cards = [
     min: 5,
     max: 10,
     special: 'split',
+    weight: 1.1,
   },
   {
     id: 'g-protocol-heat',
@@ -408,6 +448,7 @@ export const cards = [
     min: 8,
     max: 14,
     special: 'buffer',
+    weight: 0.95,
   },
   {
     id: 'g-tunnel-calibrate',
@@ -417,6 +458,7 @@ export const cards = [
     min: 6,
     max: 11,
     special: 'ghost',
+    weight: 1.25,
   },
   {
     id: 'g-lattice-lift',
@@ -426,6 +468,7 @@ export const cards = [
     min: 4,
     max: 8,
     special: 'shield',
+    weight: 1.2,
   },
   {
     id: 'g-bull-beacon',
@@ -435,24 +478,27 @@ export const cards = [
     min: 7,
     max: 12,
     special: 'latch',
+    weight: 1.0,
   },
   {
     id: 'r-phase-drop',
     name: '相位下挫',
     color: 'red',
     attr: 'bear',
-    min: -6,
-    max: -11,
+    min: -11,
+    max: -6,
     special: 'split',
+    weight: 0.9,
   },
   {
     id: 'r-darknet-vent',
     name: '黑网泄压',
     color: 'red',
     attr: 'bear',
-    min: -7,
-    max: -12,
+    min: -12,
+    max: -7,
     special: 'buffer',
+    weight: 0.85,
   },
   {
     id: 'r-entropy-retrace',
@@ -462,6 +508,7 @@ export const cards = [
     min: -5,
     max: -9,
     special: 'shield',
+    weight: 1.1,
   },
   {
     id: 'r-noise-collapse',
@@ -471,6 +518,7 @@ export const cards = [
     min: -6,
     max: -11,
     special: 'ghost',
+    weight: 1.2,
   },
   {
     id: 'r-reverse-drift',
@@ -480,6 +528,7 @@ export const cards = [
     min: -8,
     max: -13,
     special: 'latch',
+    weight: 0.8,
   },
   {
     id: 'r-fault-slide',
@@ -489,6 +538,7 @@ export const cards = [
     min: -7,
     max: -12,
     special: 'split',
+    weight: 0.85,
   },
   {
     id: 'r-bandwidth-choke',
@@ -498,6 +548,7 @@ export const cards = [
     min: -6,
     max: -10,
     special: 'buffer',
+    weight: 1.0,
   },
   {
     id: 'r-darkline-diffuse',
@@ -507,15 +558,17 @@ export const cards = [
     min: -5,
     max: -10,
     special: 'shield',
+    weight: 1.1,
   },
   {
     id: 'r-cooldown-fall',
     name: '冷却坠落',
     color: 'red',
     attr: 'bear',
-    min: -9,
-    max: -14,
+    min: -8,
+    max: -11,
     special: 'ghost',
+    weight: 1.15,
   },
   {
     id: 'r-yaw-slide',
@@ -525,6 +578,7 @@ export const cards = [
     min: -6,
     max: -11,
     special: 'latch',
+    weight: 0.95,
   },
 ]
 

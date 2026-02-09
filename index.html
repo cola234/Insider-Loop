@@ -265,49 +265,6 @@
         transition: opacity 1.2s ease;
       }
 
-      .rules-card {
-        width: min(720px, 90vw);
-        background: rgba(6, 10, 28, 0.95);
-        border: 1px solid var(--panel-border);
-        padding: clamp(24px, 4vw, 36px);
-        box-shadow: 0 0 30px rgba(34, 243, 255, 0.25);
-        display: grid;
-        gap: 24px;
-      }
-
-      .rules-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        font-size: 18px;
-        color: var(--text-muted);
-      }
-
-      .rules-title {
-        font-family: "Press Start 2P", monospace;
-        font-size: clamp(20px, 3vw, 28px);
-        color: var(--neon-cyan);
-        margin-bottom: 12px;
-      }
-
-      .rules-desc {
-        font-size: clamp(20px, 2.6vw, 26px);
-        color: var(--text-main);
-        line-height: 1.5;
-      }
-
-      .rules-actions {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 12px;
-        justify-content: space-between;
-      }
-
-      .rules-actions .btn {
-        flex: 1 1 auto;
-        min-width: 120px;
-      }
-
       .credits-card {
         width: min(520px, 90vw);
         background: rgba(6, 10, 28, 0.95);
@@ -317,6 +274,78 @@
         text-align: center;
         display: grid;
         gap: 16px;
+      }
+
+      .leaderboard-card {
+        width: min(680px, 92vw);
+        text-align: left;
+        gap: 12px;
+      }
+
+      .leaderboard-status {
+        font-size: 16px;
+        color: var(--text-muted);
+        min-height: 18px;
+      }
+
+      .leaderboard-list {
+        display: grid;
+        gap: 10px;
+        max-height: min(52vh, 520px);
+        overflow: auto;
+        padding-right: 4px;
+      }
+
+      .leaderboard-row {
+        display: grid;
+        grid-template-columns: 44px minmax(0, 1fr) 120px;
+        gap: 12px;
+        align-items: center;
+        padding: 12px 14px;
+        border: 1px solid rgba(34, 243, 255, 0.2);
+        background: rgba(5, 8, 20, 0.65);
+      }
+
+      .leaderboard-rank {
+        font-family: "Press Start 2P", monospace;
+        font-size: 12px;
+        color: var(--neon-cyan);
+        text-shadow: 0 0 14px rgba(34, 243, 255, 0.55);
+      }
+
+      .leaderboard-player {
+        font-size: 18px;
+        color: var(--text-main);
+        letter-spacing: 1px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .leaderboard-score {
+        text-align: right;
+        font-family: "Press Start 2P", monospace;
+        font-size: 12px;
+        color: var(--neon-green);
+        text-shadow: 0 0 16px rgba(40, 255, 107, 0.5);
+      }
+
+      .rank-1 {
+        color: #ffd700;
+      }
+      .rank-2 {
+        color: #c0c0c0;
+      }
+      .rank-3 {
+        color: #cd7f32;
+      }
+
+      .leaderboard-actions {
+        display: flex;
+        gap: 12px;
+        justify-content: flex-end;
+        flex-wrap: wrap;
+        margin-top: 4px;
       }
 
       .credits-card h2 {
@@ -350,6 +379,11 @@
         .footer {
           text-align: left;
         }
+
+        .leaderboard-row {
+          grid-template-columns: 38px minmax(0, 1fr) 96px;
+          padding: 10px 12px;
+        }
       }
 
       @media (prefers-reduced-motion: reduce) {
@@ -365,6 +399,7 @@
       <header>
         <div class="title">INSIDER LOOP</div>
         <div class="toggles">
+          <button class="toggle" id="lang-toggle" type="button">EN</button>
           <button class="toggle" id="bgm-toggle" type="button">BGM: ON</button>
           <button class="toggle" id="sfx-toggle" type="button">SFX: ON</button>
         </div>
@@ -377,6 +412,7 @@
           <div class="actions">
             <button class="btn btn-primary" id="start-btn" type="button">开始游戏</button>
             <button class="btn btn-secondary" id="credits-btn" type="button">制作人员</button>
+            <button class="btn btn-secondary" id="leaderboard-btn" type="button">排行榜</button>
           </div>
           <div class="hint">提示：音效与背景音乐可随时开关。</div>
         </section>
@@ -387,24 +423,6 @@
 
     <div class="overlay" id="week-overlay" aria-hidden="true">
       <div class="week-text">第一周....</div>
-    </div>
-
-    <div class="overlay" id="rules-overlay" aria-hidden="true">
-      <div class="rules-card">
-        <div class="rules-header">
-          <span id="rules-progress">01 / 05</span>
-          <span>规则说明</span>
-        </div>
-        <div>
-          <div class="rules-title" id="rule-title"></div>
-          <div class="rules-desc" id="rule-desc"></div>
-        </div>
-        <div class="rules-actions">
-          <button class="btn btn-secondary" id="rules-prev" type="button">上一页</button>
-          <button class="btn btn-secondary" id="rules-skip" type="button">跳过</button>
-          <button class="btn btn-primary" id="rules-next" type="button">下一页</button>
-        </div>
-      </div>
     </div>
 
     <div class="overlay" id="credits-overlay" aria-hidden="true">
@@ -418,6 +436,18 @@
       </div>
     </div>
 
+    <div class="overlay" id="leaderboard-overlay" aria-hidden="true">
+      <div class="credits-card leaderboard-card">
+        <h2 id="leaderboard-title">排行榜</h2>
+        <div class="leaderboard-status" id="leaderboard-status"></div>
+        <div class="leaderboard-list" id="leaderboard-list" role="list"></div>
+        <div class="leaderboard-actions">
+          <button class="btn btn-secondary" id="leaderboard-refresh" type="button">刷新</button>
+          <button class="btn btn-secondary" id="leaderboard-close" type="button">关闭</button>
+        </div>
+      </div>
+    </div>
+
     <iframe id="game-preload" src="/game.html" title="game-preload" aria-hidden="true"></iframe>
     <audio id="bgm" src="/audio/bgm.mp3" loop></audio>
     <audio id="sfx-start" src="/audio/start.wav"></audio>
@@ -427,16 +457,17 @@
       const creditsButton = document.getElementById("credits-btn");
       const creditsOverlay = document.getElementById("credits-overlay");
       const creditsClose = document.getElementById("credits-close");
+      const leaderboardButton = document.getElementById("leaderboard-btn");
+      const leaderboardOverlay = document.getElementById("leaderboard-overlay");
+      const leaderboardClose = document.getElementById("leaderboard-close");
+      const leaderboardRefresh = document.getElementById("leaderboard-refresh");
+      const leaderboardStatus = document.getElementById("leaderboard-status");
+      const leaderboardList = document.getElementById("leaderboard-list");
+      const leaderboardTitle = document.getElementById("leaderboard-title");
       const weekOverlay = document.getElementById("week-overlay");
-      const rulesOverlay = document.getElementById("rules-overlay");
-      const rulesTitle = document.getElementById("rule-title");
-      const rulesDesc = document.getElementById("rule-desc");
-      const rulesProgress = document.getElementById("rules-progress");
-      const rulesPrev = document.getElementById("rules-prev");
-      const rulesNext = document.getElementById("rules-next");
-      const rulesSkip = document.getElementById("rules-skip");
       const bgmToggle = document.getElementById("bgm-toggle");
       const sfxToggle = document.getElementById("sfx-toggle");
+      const langToggle = document.getElementById("lang-toggle");
       const bgmAudio = document.getElementById("bgm");
       const startSfx = document.getElementById("sfx-start");
       const gameFrame = document.getElementById("game-preload");
@@ -444,55 +475,65 @@
       let bgmEnabled = true;
       let sfxEnabled = true;
       let userInteracted = false;
-      let ruleIndex = 0;
+      let currentLang = localStorage.getItem('lang') || 'zh';
+      let leaderboardLoading = false;
+      let leaderboardAbort = null;
 
-            const rules = [
-              {
-                title: "游戏目标",
-                desc: "这是一款策略卡牌游戏，通过安排卡牌影响股价走势。目标是在规定周数内达到目标资产值；资产 = 现金 + 股票价值。",
-              },
-              {
-                title: "卡牌选择",
-                desc: "每天开始时，从红色卡牌（下跌）和绿色卡牌（上涨）中各选一张。红色卡牌适合在高位卖出或低位买入前使用。",
-              },
-              {
-                title: "卡牌排序",
-                desc: "选完后进入排序阶段，可拖拽调整执行顺序。顺序会改变价格路径与收益结果，也会影响连击触发。",
-              },
-              {
-                title: "牛/熊/猴组合",
-                desc: "不同的组合可以造成暴击，造成更大波动。例如牛+牛可以造成更大的波动；熊+熊可以将波动变小；猴+猴可以使得下一张牌的效果反转。",
-              },
-              {
-                title: "交易与执行",
-                desc: "点击执行后按顺序结算；当日收益影响现金与下一天。达到周目标进入下一周，否则游戏结束。",
-              },
-            ];
+      // 多语言文本
+      const i18n = {
+        zh: {
+          subtitle: '准备好后点击开始，进入挑战。',
+          startGame: '开始游戏',
+          credits: '制作人员',
+          leaderboard: '排行榜',
+          leaderboardTitle: '排行榜',
+          leaderboardLoading: '正在加载...',
+          leaderboardEmpty: '暂无数据（先通关并上传分数）',
+          leaderboardError: '加载失败，请稍后重试',
+          leaderboardRefresh: '刷新',
+          close: '关闭',
+          rank: '排名',
+          player: '玩家',
+          score: '分数',
+          hint: '提示：音效与背景音乐可随时开关。',
+          weekText: '第一周....'
+        },
+        en: {
+          subtitle: 'Ready? Click start to begin the challenge.',
+          startGame: 'Start Game',
+          credits: 'Credits',
+          leaderboard: 'Leaderboard',
+          leaderboardTitle: 'Leaderboard',
+          leaderboardLoading: 'Loading...',
+          leaderboardEmpty: 'No entries yet (win and upload your score first).',
+          leaderboardError: 'Failed to load. Please retry.',
+          leaderboardRefresh: 'Refresh',
+          close: 'Close',
+          rank: 'Rank',
+          player: 'Player',
+          score: 'Score',
+          hint: 'Tip: BGM and SFX can be toggled anytime.',
+          weekText: 'Week 1....'
+        }
+      };
+
+      function updateLanguage() {
+        const t = i18n[currentLang];
+        document.querySelector('.hero-panel p').textContent = t.subtitle;
+        startButton.textContent = t.startGame;
+        creditsButton.textContent = t.credits;
+        leaderboardButton.textContent = t.leaderboard;
+        document.querySelector('.hint').textContent = t.hint;
+        document.querySelector('.week-text').textContent = t.weekText;
+        langToggle.textContent = currentLang === 'zh' ? 'EN' : '中文';
+        leaderboardTitle.textContent = t.leaderboardTitle;
+        leaderboardRefresh.textContent = t.leaderboardRefresh;
+        leaderboardClose.textContent = t.close;
+      }
 
       function updateToggle(button, enabled, label) {
         button.classList.toggle("off", !enabled);
         button.textContent = `${label}: ${enabled ? "ON" : "OFF"}`;
-      }
-
-      function updateRules() {
-        const current = rules[ruleIndex];
-        rulesTitle.textContent = current.title;
-        rulesDesc.textContent = current.desc;
-        rulesProgress.textContent = `${String(ruleIndex + 1).padStart(2, "0")} / 05`;
-        rulesPrev.disabled = ruleIndex === 0;
-        rulesPrev.style.opacity = ruleIndex === 0 ? "0.4" : "1";
-        rulesNext.textContent = ruleIndex === rules.length - 1 ? "进入游戏" : "下一页";
-      }
-
-      function openRules() {
-        updateRules();
-        rulesOverlay.classList.add("is-visible");
-        rulesOverlay.setAttribute("aria-hidden", "false");
-      }
-
-      function closeRules() {
-        rulesOverlay.classList.remove("is-visible");
-        rulesOverlay.setAttribute("aria-hidden", "true");
       }
 
       function goToGame() {
@@ -529,12 +570,20 @@
 
       updateToggle(bgmToggle, bgmEnabled, "BGM");
       updateToggle(sfxToggle, sfxEnabled, "SFX");
+      updateLanguage();
+
+      langToggle.addEventListener("click", () => {
+        currentLang = currentLang === 'zh' ? 'en' : 'zh';
+        localStorage.setItem('lang', currentLang);
+        updateLanguage();
+      });
 
       startButton.addEventListener("click", () => {
         userInteracted = true;
         playStartSound();
         playBgmIfAllowed();
-        openRules();
+        document.getElementById("start-stage").classList.add("is-hidden");
+        goToGame();
       });
 
       creditsButton.addEventListener("click", () => {
@@ -545,6 +594,243 @@
       creditsClose.addEventListener("click", () => {
         creditsOverlay.classList.remove("is-visible");
         creditsOverlay.setAttribute("aria-hidden", "true");
+      });
+
+      function formatAddress(address) {
+        if (!address || address.length < 8) return address || '';
+        return `${address.slice(0, 4)}...${address.slice(-4)}`;
+      }
+
+      function setLeaderboardStatus(text, isError) {
+        leaderboardStatus.textContent = text || '';
+        leaderboardStatus.style.color = isError ? 'var(--neon-pink)' : 'var(--text-muted)';
+      }
+
+      function renderLeaderboard(entries) {
+        leaderboardList.innerHTML = '';
+        if (!entries || entries.length === 0) return;
+
+        for (let i = 0; i < entries.length; i += 1) {
+          const entry = entries[i];
+          const row = document.createElement('div');
+          row.className = 'leaderboard-row';
+          row.setAttribute('role', 'listitem');
+
+          const rank = document.createElement('div');
+          rank.className = `leaderboard-rank rank-${i + 1}`;
+          rank.textContent = String(i + 1);
+
+          const player = document.createElement('div');
+          player.className = 'leaderboard-player';
+          player.textContent = formatAddress(entry.player);
+
+          const score = document.createElement('div');
+          score.className = 'leaderboard-score';
+          score.textContent = `$${Number(entry.score || 0).toFixed(2)}`;
+
+          row.appendChild(rank);
+          row.appendChild(player);
+          row.appendChild(score);
+          leaderboardList.appendChild(row);
+        }
+      }
+
+      async function solanaRpc(endpoint, method, params, signal) {
+        const body = {
+          jsonrpc: '2.0',
+          id: 1,
+          method,
+          params
+        };
+
+        const res = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify(body),
+          signal
+        });
+        if (!res.ok) throw new Error(`RPC HTTP ${res.status}`);
+        const json = await res.json();
+        if (json.error) throw new Error(json.error.message || 'RPC error');
+        return json.result;
+      }
+
+      function safeJsonParse(text) {
+        try {
+          return JSON.parse(text);
+        } catch (e) {
+          return null;
+        }
+      }
+
+      async function fetchLeaderboardEntries(signal) {
+        const RPC_ENDPOINT = 'https://api.devnet.solana.com';
+        const MEMO_PROGRAM = 'MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr';
+        const GAME_ID = 'stock-card-master';
+        const SIGNATURE_LIMIT = 25;
+        const MAX_ENTRIES = 20;
+
+        const sigInfos = await solanaRpc(
+          RPC_ENDPOINT,
+          'getSignaturesForAddress',
+          [MEMO_PROGRAM, { limit: SIGNATURE_LIMIT }],
+          signal
+        );
+        const signatures = (sigInfos || []).map((s) => s.signature).filter(Boolean);
+        if (signatures.length === 0) return [];
+
+        // Some public RPCs don't implement getParsedTransactions. Fallback to per-tx getTransaction.
+        let txs = null;
+        try {
+          txs = await solanaRpc(
+            RPC_ENDPOINT,
+            'getParsedTransactions',
+            [signatures, { maxSupportedTransactionVersion: 0, commitment: 'confirmed' }],
+            signal
+          );
+        } catch (e) {
+          txs = null;
+        }
+
+        if (!Array.isArray(txs)) {
+          const fetched = [];
+          for (let i = 0; i < signatures.length; i += 1) {
+            const sig = signatures[i];
+            try {
+              const tx = await solanaRpc(
+                RPC_ENDPOINT,
+                'getTransaction',
+                [sig, { maxSupportedTransactionVersion: 0, commitment: 'confirmed' }],
+                signal
+              );
+              fetched.push(tx);
+            } catch (e) {
+              fetched.push(null);
+            }
+          }
+          txs = fetched;
+        }
+
+        const entries = [];
+        for (let i = 0; i < (txs || []).length; i += 1) {
+          const tx = txs[i];
+          if (!tx || !tx.transaction || !tx.transaction.message) continue;
+
+          const accountKeys = tx.transaction.message.accountKeys || [];
+          const payer = accountKeys[0]?.pubkey || accountKeys[0] || '';
+          const player = typeof payer === 'string' ? payer : (payer?.toString ? payer.toString() : String(payer));
+
+          // Prefer parsed instructions when available
+          const instructions = tx.transaction.message.instructions || [];
+          let matched = false;
+          for (let j = 0; j < instructions.length; j += 1) {
+            const ix = instructions[j];
+            if (!ix) continue;
+            if (ix.program === 'spl-memo' && typeof ix.parsed === 'string') {
+              if (!ix.parsed.includes(GAME_ID)) continue;
+              const data = safeJsonParse(ix.parsed);
+              if (!data || data.game !== GAME_ID) continue;
+              matched = true;
+              entries.push({
+                player,
+                score: Number(data.score || 0),
+                week: Number(data.week || 0),
+                timestamp: Number(data.timestamp || 0),
+                signature: signatures[i] || ''
+              });
+            }
+          }
+
+          // Fallback: parse memo from log messages (when instructions aren't parsed)
+          if (!matched && tx.meta && Array.isArray(tx.meta.logMessages)) {
+            for (let j = 0; j < tx.meta.logMessages.length; j += 1) {
+              const log = tx.meta.logMessages[j];
+              if (typeof log !== 'string' || !log.includes(GAME_ID)) continue;
+              const m = log.match(/Program log: Memo \\(len \\d+\\): \\\"(.*)\\\"/);
+              if (!m) continue;
+              const data = safeJsonParse(m[1]);
+              if (!data || data.game !== GAME_ID) continue;
+              entries.push({
+                player,
+                score: Number(data.score || 0),
+                week: Number(data.week || 0),
+                timestamp: Number(data.timestamp || 0),
+                signature: signatures[i] || ''
+              });
+              break;
+            }
+          }
+        }
+
+        entries.sort((a, b) => (b.score - a.score));
+        return entries.slice(0, MAX_ENTRIES);
+      }
+
+      async function loadLeaderboard() {
+        if (leaderboardLoading) return;
+
+        leaderboardLoading = true;
+        const t = i18n[currentLang];
+
+        // show cached first (fast UI)
+        try {
+          const cachedRaw = localStorage.getItem('leaderboard_cache');
+          if (cachedRaw) {
+            const cached = safeJsonParse(cachedRaw);
+            if (cached && Array.isArray(cached.entries) && cached.entries.length) {
+              setLeaderboardStatus('');
+              renderLeaderboard(cached.entries);
+            }
+          }
+        } catch (e) {}
+
+        setLeaderboardStatus(t.leaderboardLoading);
+
+        if (leaderboardAbort) {
+          try { leaderboardAbort.abort(); } catch (e) {}
+        }
+        leaderboardAbort = new AbortController();
+
+        try {
+          const timeout = setTimeout(() => {
+            try { leaderboardAbort.abort(); } catch (e) {}
+          }, 15000);
+
+          const entries = await fetchLeaderboardEntries(leaderboardAbort.signal);
+          clearTimeout(timeout);
+
+          if (!entries || entries.length === 0) {
+            leaderboardList.innerHTML = '';
+            setLeaderboardStatus(t.leaderboardEmpty);
+          } else {
+            setLeaderboardStatus('');
+            renderLeaderboard(entries);
+            try {
+              localStorage.setItem('leaderboard_cache', JSON.stringify({ ts: Date.now(), entries }));
+            } catch (e) {}
+          }
+        } catch (e) {
+          leaderboardList.innerHTML = '';
+          const msg = (e && e.message) ? `${t.leaderboardError} (${e.message})` : t.leaderboardError;
+          setLeaderboardStatus(msg, true);
+        } finally {
+          leaderboardLoading = false;
+        }
+      }
+
+      leaderboardButton.addEventListener("click", () => {
+        leaderboardOverlay.classList.add("is-visible");
+        leaderboardOverlay.setAttribute("aria-hidden", "false");
+        loadLeaderboard();
+      });
+
+      leaderboardClose.addEventListener("click", () => {
+        leaderboardOverlay.classList.remove("is-visible");
+        leaderboardOverlay.setAttribute("aria-hidden", "true");
+      });
+
+      leaderboardRefresh.addEventListener("click", () => {
+        loadLeaderboard();
       });
 
       bgmToggle.addEventListener("click", () => {
@@ -560,28 +846,6 @@
       sfxToggle.addEventListener("click", () => {
         sfxEnabled = !sfxEnabled;
         updateToggle(sfxToggle, sfxEnabled, "SFX");
-      });
-
-      rulesPrev.addEventListener("click", () => {
-        if (ruleIndex > 0) {
-          ruleIndex -= 1;
-          updateRules();
-        }
-      });
-
-      rulesNext.addEventListener("click", () => {
-        if (ruleIndex < rules.length - 1) {
-          ruleIndex += 1;
-          updateRules();
-          return;
-        }
-        closeRules();
-        showWeekSequence();
-      });
-
-      rulesSkip.addEventListener("click", () => {
-        closeRules();
-        showWeekSequence();
       });
     </script>
   </body>

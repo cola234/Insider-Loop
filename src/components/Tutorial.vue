@@ -2,7 +2,7 @@
   <div class="tutorial-overlay" @click="handleSkip">
     <div class="tutorial-content" @click.stop>
       <button class="skip-btn" @click="handleSkip">
-        跳过教程 ✕
+        {{ t.tutorial.skipTutorial }} ✕
       </button>
 
       <!-- Tutorial pages -->
@@ -20,43 +20,43 @@
           <!-- Page 1: Welcome -->
           <div v-if="currentPage === 1" class="page-content">
             <div class="icon-large">🎮</div>
-            <h2 class="page-title">欢迎来到股市卡牌大师</h2>
+            <h2 class="page-title">{{ t.tutorial.welcome }}</h2>
             <p class="page-text">
-              这是一款策略卡牌游戏，你需要通过合理安排红色和绿色卡牌来影响股价走势。
+              {{ t.tutorial.intro }}
             </p>
             <p class="page-text highlight">
-              目标：在规定周数内达到目标资产值！
+              {{ t.tutorial.goal }}
             </p>
           </div>
 
           <!-- Page 2: Card Selection -->
           <div v-if="currentPage === 2" class="page-content">
             <div class="icon-large">🎴</div>
-            <h2 class="page-title">选择卡牌</h2>
+            <h2 class="page-title">{{ t.tutorial.selectCards }}</h2>
             <p class="page-text">
-              每天开始时，你需要从<span class="red-text">红色卡牌</span>和<span class="green-text">绿色卡牌</span>中各选择一张。
+              {{ t.tutorial.selectCardsDesc }}
             </p>
             <div class="card-demo">
               <div class="demo-card red">
-                <div class="card-label">红色卡牌</div>
-                <div class="card-effect">下跌效果</div>
+                <div class="card-label">{{ t.tutorial.redCard }}</div>
+                <div class="card-effect">{{ t.tutorial.fallEffect }}</div>
               </div>
               <div class="demo-card green">
-                <div class="card-label">绿色卡牌</div>
-                <div class="card-effect">上涨效果</div>
+                <div class="card-label">{{ t.tutorial.greenCard }}</div>
+                <div class="card-effect">{{ t.tutorial.riseEffect }}</div>
               </div>
             </div>
             <p class="page-text small">
-              💡 提示：每天有一次重抽机会
+              💡 {{ t.tutorial.rerollTip }}
             </p>
           </div>
 
           <!-- Page 3: Deck Arrangement -->
           <div v-if="currentPage === 3" class="page-content">
             <div class="icon-large">📊</div>
-            <h2 class="page-title">排列卡组</h2>
+            <h2 class="page-title">{{ t.tutorial.arrangeDeck }}</h2>
             <p class="page-text">
-              选择完卡牌后，你可以通过<strong>拖拽</strong>来调整卡组中的卡牌顺序。
+              {{ t.tutorial.arrangeDeckDesc }}
             </p>
             <div class="demo-deck">
               <div class="demo-deck-card green">1</div>
@@ -65,29 +65,29 @@
               <div class="demo-deck-card red">4</div>
             </div>
             <p class="page-text highlight">
-              卡牌的顺序会影响连击效果和特殊规则！
+              {{ t.tutorial.orderMatters }}
             </p>
           </div>
 
           <!-- Page 4: Execution -->
           <div v-if="currentPage === 4" class="page-content">
             <div class="icon-large">⚡</div>
-            <h2 class="page-title">执行与策略</h2>
+            <h2 class="page-title">{{ t.tutorial.executeStrategy }}</h2>
             <p class="page-text">
-              点击"开始执行"后，卡牌将按顺序生效，影响股价。
+              {{ t.tutorial.executeDesc }}
             </p>
             <div class="strategy-tips">
               <div class="tip-item">
                 <span class="tip-icon">📈</span>
-                <span>持有股票时使用绿色卡牌</span>
+                <span>{{ t.tutorial.tip1 }}</span>
               </div>
               <div class="tip-item">
                 <span class="tip-icon">💰</span>
-                <span>低价买入，高价卖出</span>
+                <span>{{ t.tutorial.tip2 }}</span>
               </div>
               <div class="tip-item">
                 <span class="tip-icon">🎯</span>
-                <span>注意每周的目标资产值</span>
+                <span>{{ t.tutorial.tip3 }}</span>
               </div>
             </div>
           </div>
@@ -95,15 +95,15 @@
           <!-- Page 5: Start -->
           <div v-if="currentPage === 5" class="page-content">
             <div class="icon-large">🚀</div>
-            <h2 class="page-title">准备好了吗？</h2>
+            <h2 class="page-title">{{ t.tutorial.ready }}</h2>
             <p class="page-text">
-              现在你已经了解了游戏的基本规则。
+              {{ t.tutorial.readyDesc }}
             </p>
             <p class="page-text highlight">
-              祝你好运，成为真正的股市大师！
+              {{ t.tutorial.goodLuck }}
             </p>
             <button class="start-game-btn" @click="handleSkip">
-              开始游戏 🎮
+              {{ lang === 'zh' ? '开始游戏' : 'Start Game' }} 🎮
             </button>
           </div>
         </div>
@@ -116,13 +116,13 @@
           :disabled="currentPage === 1"
           @click="prevPage"
         >
-          ← 上一页
+          ← {{ t.tutorial.prev }}
         </button>
         <button
           class="nav-btn primary"
           @click="nextPage"
         >
-          {{ currentPage === totalPages ? '开始游戏' : '下一页 →' }}
+          {{ currentPage === totalPages ? (lang === 'zh' ? '开始游戏' : 'Start Game') : t.tutorial.next + ' →' }}
         </button>
       </div>
     </div>
@@ -131,6 +131,9 @@
 
 <script setup>
 import { ref } from 'vue'
+import { useI18n } from '../i18n'
+
+const { t, lang } = useI18n()
 
 const emit = defineEmits(['complete'])
 

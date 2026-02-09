@@ -48,6 +48,61 @@
   box-sizing: border-box;
 }
 
+/* App wrapper for start/tutorial/game flow */
+.app-wrapper {
+  width: 100%;
+  min-height: 100vh;
+}
+
+.black-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: #000;
+  z-index: 5000;
+  animation: fadeIn 0.5s ease-out;
+}
+
+/* Week overlay */
+.week-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 6000;
+  animation: weekFadeIn 0.5s ease-out;
+}
+
+.week-overlay .week-text {
+  font-size: clamp(32px, 6vw, 56px);
+  color: var(--neon-cyan, #00FFFF);
+  font-family: 'Press Start 2P', monospace;
+  text-shadow: 0 0 20px rgba(0, 255, 255, 0.6);
+  animation: weekPulse 1s ease-in-out infinite;
+}
+
+@keyframes weekFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes weekPulse {
+  0%, 100% { opacity: 0.8; }
+  50% { opacity: 1; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
 body {
   margin: 0;
   min-height: 100vh;
@@ -106,7 +161,7 @@ body::after {
   margin: 0 auto;
   padding: var(--space-2xl);
   /* container-type: inline-size; - 移除以避免影响 fixed 定位 */
-  filter: drop-shadow(0 0 10px rgba(0, 255, 0, 0.3));
+  /* filter: drop-shadow(0 0 10px rgba(0, 255, 0, 0.3)); - 移除以避免影响 fixed 定位 */
 }
 
 @container (max-width: 900px) {
@@ -135,6 +190,7 @@ body::after {
 .audio-toggle {
   display: flex;
   justify-content: flex-end;
+  gap: 10px;
   margin-bottom: 10px;
 }
 
@@ -491,6 +547,33 @@ body.crit-shake .app {
 .end-modal-actions {
   display: flex;
   gap: 10px;
+  flex-wrap: wrap;
+}
+
+.upload-status {
+  margin-top: 10px;
+  padding: 8px 12px;
+  background: rgba(78, 205, 196, 0.1);
+  border: 1px solid rgba(78, 205, 196, 0.3);
+  border-radius: 4px;
+  color: #4ecdc4;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.btn.primary {
+  background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
+  color: white;
+  border-color: #4ecdc4;
+}
+
+.btn.primary:hover:not(:disabled) {
+  box-shadow: 0 0 12px rgba(78, 205, 196, 0.5);
+}
+
+.btn.primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 .end-modal-chart {
@@ -691,15 +774,20 @@ body.crit-shake .app {
 .deck-mobile-controls {
   display: none;
   position: absolute;
-  right: 6px;
-  top: 6px;
-  gap: 4px;
+  right: 4px;
+  top: 4px;
+  flex-direction: column;
+  gap: 2px;
+  z-index: 10;
 }
 
 .deck-move {
   padding: 2px 6px;
-  font-size: 12px;
+  font-size: 10px;
   line-height: 1;
+  min-width: 20px;
+  min-height: 18px;
+  border-width: 1px;
 }
 
 /* 左上角装饰图标 */
@@ -1380,11 +1468,38 @@ body.crit-shake .app {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  font-size: var(--font-size-sm);
+}
+
+/* 模糊背景层 - 填满容器 */
+.choice-card::before {
+  content: '';
+  position: absolute;
+  inset: -10px;
+  background-image: var(--blur-bg);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  filter: blur(8px);
+  z-index: 0;
+  opacity: 0.6;
+  clip-path: inset(10px);
+}
+
+/* 清晰前景图层 */
+.choice-card-bg {
+  position: absolute;
+  inset: 0;
   background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
-  font-size: var(--font-size-sm);
-  /* 推荐图片尺寸：400x600 或 300x450 （宽高比 2:3） */
+  z-index: 1;
+}
+
+/* 卡牌内容层 */
+.choice-card > *:not(.choice-card-bg) {
+  position: relative;
+  z-index: 2;
 }
 
 .choice-card.red {
@@ -1759,32 +1874,90 @@ body.crit-shake .app {
     gap: 14px;
   }
 
+  /* 交易卡组选择：3张卡横向排列，等宽 */
   .card-group {
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
   }
 
   .choice-card {
-    flex: 1 1 calc(50% - 8px);
-    min-width: 140px;
+    min-width: 0;
+    min-height: 100px;
+    padding: 8px;
+    font-size: 11px;
   }
 
+  .choice-card .card-name {
+    font-size: 11px;
+    line-height: 1.2;
+  }
+
+  .choice-card .card-attr {
+    font-size: 10px;
+  }
+
+  .choice-card .card-range {
+    font-size: 9px;
+  }
+
+  /* 卡组序列：网格布局，2列5行 */
   .deck-cards {
-    flex-wrap: wrap;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    overflow: visible;
   }
 
   .deck-card {
-    min-width: calc(50% - 8px);
+    min-width: 0;
+    width: 100%;
+    padding: 10px;
+  }
+
+  .deck-card .card-top {
+    font-size: 11px;
+    margin-bottom: 6px;
+  }
+
+  .deck-card .card-top span:last-child {
+    font-size: 10px;
+  }
+
+  .deck-card .card-body {
+    font-size: 10px;
   }
 
   .deck-mobile-controls {
-    display: inline-flex;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .deck-mobile-controls .btn {
+    padding: 2px 5px;
+    font-size: 9px;
+    min-width: 18px;
+    min-height: 16px;
+    border-width: 1px;
+  }
+
+  .deck-mobile-controls .btn::before,
+  .deck-mobile-controls .btn::after {
+    content: none;
   }
 
   .log-toggle {
     display: inline-flex;
     align-items: center;
     justify-content: center;
+  }
+
+  /* 手机端禁用 hover tooltip，改用点击弹窗 */
+  .choice-card:hover::after,
+  .deck-card:hover::after,
+  .card:hover::after {
+    opacity: 0 !important;
   }
 }
 
@@ -1829,4 +2002,61 @@ body.crit-shake .app {
 @keyframes cardFlip {
   0% { transform: translateY(-2px) scale(1) rotateY(0deg); }
   100% { transform: translateY(-4px) scale(1.02) rotateY(180deg); }
+}
+
+/* 手机端卡牌详情弹窗 */
+.card-detail-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  padding: 20px;
+}
+
+.card-detail-content {
+  background: var(--bg-dark);
+  border: 3px double var(--neon-green);
+  padding: 20px;
+  max-width: 320px;
+  width: 100%;
+  box-shadow: 0 0 30px rgba(0, 255, 0, 0.4);
+}
+
+.card-detail-content.red {
+  border-color: var(--neon-red);
+  box-shadow: 0 0 30px rgba(255, 0, 0, 0.4);
+}
+
+.card-detail-name {
+  font-size: 18px;
+  color: var(--neon-green);
+  margin-bottom: 12px;
+  text-shadow: 0 0 10px rgba(0, 255, 0, 0.6);
+}
+
+.card-detail-content.red .card-detail-name {
+  color: var(--neon-red);
+  text-shadow: 0 0 10px rgba(255, 0, 0, 0.6);
+}
+
+.card-detail-attr,
+.card-detail-range,
+.card-detail-special {
+  font-size: 14px;
+  color: var(--neon-cyan);
+  margin-bottom: 8px;
+  line-height: 1.6;
+}
+
+.card-detail-special {
+  margin-bottom: 16px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(0, 255, 0, 0.3);
+}
+
+.card-detail-content .btn {
+  width: 100%;
 }
